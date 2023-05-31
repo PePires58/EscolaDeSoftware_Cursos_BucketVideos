@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Escola de software - Cursos - Bucket videos
+Parameters:
+  BucketName:
+    Description: S3 Bucket Name
+    Type: String
+  Environment:
+    Description: Environment
+    Type: String
+
+Resources:
+  CursosBucketVideos:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Join ["-", [!Ref Environment, !Ref BucketName]]
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
+  CursosBucketVideosPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CursosBucketVideos
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:PutObject
+              - s3:DeleteObject
+            Effect: Allow
+            Resource:
+              - !Sub arn:aws:s3:::${CursosBucketVideos}
+              - !Sub arn:aws:s3:::${CursosBucketVideos}/*
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Sub "${AWS::AccountId}"
