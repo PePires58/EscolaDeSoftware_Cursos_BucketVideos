@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: escoladesoftware_cursos_bucketvideos
+Description: Escola de software - Cursos - Bucket videos
 Parameters:
   BucketName:
     Description: S3 Bucket Name
